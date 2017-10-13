@@ -102,11 +102,13 @@ class trackControl(object):
             self.r = 1
             self.pos_x = 0 # first position of x
             self.pos_y = 0 # first position of y
-            self.num = 5000 # 50 secs if the Hz is 100
+            self.num = 1250 # 50 secs if the Hz is 100 # from 5000
             for t in range(1, self.num + 1): # Straight Up
-                yp = self.pos_y + (1.0 * self.r / self.num) # next desired yp
-                xp = 0 # keep constant
-                print yp
+                # yp = self.pos_y + (1.0 * self.r / self.num) # next desired yp
+                # xp = 0 # keep constant
+                xp = self.pos_x - (1.0 * self.r / self.num) # next desired yp
+                yp = 0 # keep constant
+                # print yp
                 self.control(xp, yp) # get the velocity from 
                 self.pos_x = xp
                 self.pos_y = yp
