@@ -1,6 +1,8 @@
 #ifndef OMNI_ROBOT_UTIL
 #define OMNI_ROBOT_UTIL
 
+
+
 /*
     Defining length, width and height of the robot, and radius of the wheels.
         -Wheel to Wheel Width measurement: 19.71 inches. 
@@ -16,10 +18,9 @@
 //#define HEIGHT 0.1
 
 // Kangaroo Unit Nominal Conversion Values. Sending these values to each respective wheel results in about 60 RPM +/- .5. May need to adjust when tuning the robot on the ground...
-// 60 RPM for this robot is approximately .6384 m/s. Conversion to KU units is #KU_CONSTANT/.6384 and vice versa.
+// Conversion to KU units is #KU_CONSTANT/CONV_VAL and vice versa.
 
 #define CONV_VAL 6.2831
-//#define CONV_VAL .6384
 
 #define KU1_1 355
 #define KU1_2 330

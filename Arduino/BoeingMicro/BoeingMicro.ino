@@ -120,9 +120,13 @@ void integrateOdom(){
   // Make call to kangaroo to get current encoder position values  
   curr_t = millis();
   k1_1c = K1_1.getP().value();
+  nh.spinOnce();
   k1_2c = K1_2.getP().value();
+  nh.spinOnce();
   k2_1c = K2_1.getP().value();
+  nh.spinOnce();
   k2_2c = K2_2.getP().value();
+  nh.spinOnce();
   dt = (curr_t - prev_t)*.001;
   prev_t = curr_t;
 }

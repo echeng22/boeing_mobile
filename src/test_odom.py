@@ -5,7 +5,7 @@ import rosbag
 
 # filename_odom = "odom_4.bag"
 # filename_vive = "vive_4.bag"
-filename = "vive_odom_bag_10.bag"
+filename = "vive_odom_bag_11.bag"
 filepath = os.path.dirname(os.path.realpath(filename))
 # bag_odom = rosbag.Bag(filepath + '/bag/' + filename_odom)
 # bag_vive = rosbag.Bag(filepath + '/bag/' + filename_vive)
@@ -34,7 +34,7 @@ for topic, msg, t in bag.read_messages(topics=['/tracker_pose_filter']):
     # xpoints_vive.append(msg.pose.position.x)
     # ypoints_vive.append(msg.pose.position.y)
     # xpoints_vive.append((msg.pose.position.x - vive_offset_x)*2.44)
-    xpoints_vive.append((msg.pose.position.x - vive_offset_x))    
+    xpoints_vive.append((msg.pose.position.x - vive_offset_x))
     ypoints_vive.append((msg.pose.position.y - vive_offset_y))
 
 count = 0
@@ -47,7 +47,7 @@ for topic, msg, t in bag.read_messages(topics=['/odom']):
     #     print msg.position.z
     #     count = 1
 
-
+plt.axes().set_aspect('equal', 'datalim')
 plt.plot(xpoints_odom, ypoints_odom, 'ro')
 plt.plot(xpoints_vive, ypoints_vive, 'bx')
 

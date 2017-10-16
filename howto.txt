@@ -1,11 +1,11 @@
 1. Get all packages setup
-- clone adam's vive_tracker_loc and NU-MSR's overhead_mobile_tracker  
+- clone adam's vive_tracker_loc and NU-MSR's overhead_mobile_tracker
 - make sure you clone jarvis-edits branch for both pkgs. and follow ther readme on how to run
 - https://stackoverflow.com/questions/1911109/how-to-clone-a-specific-git-branch >> how to clone specific branch
 2. Run the calibration file to get odom_frame_broadcaster.launch first
 - roslaunch overhead_mobile_tracker calibrate_system.launch
     - press c, wait calmly till the calibration finish status is shown, and press w after finish calibrating to save the launch file
-- roslaunch overhead_mobile_tracker vive_track.launch 
+- roslaunch overhead_mobile_tracker vive_track.launch
     - this will start tracking the vive tracker
 - rostopic echo /tracker_pose_filter
     - put the center on the black dot at the edge of blue tape on the floor. You shoud get roughly 1 x 1m of x-y plane by placing the center of the tracker on each different dot.
