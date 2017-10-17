@@ -10,7 +10,7 @@
   <arg name="pubstate" default="true" />
   <arg name="camera_enable" default="true"/>
   <arg name="camera_frame_id" default="lighthouse"/>
-  
+
   <!-- start vive node -->
   <node if="$(arg camera_enable)" name="vive_driver" pkg="vive_tracker_loc"
 	type="vive_pose_node" output="screen"/>
@@ -32,7 +32,7 @@
 
 <!-- start filtering node -->
 <node name="filtering" pkg="overhead_mobile_tracker" type="filtering.py" >
-</node> 
+</node>
 
   <!-- start rviz -->
   <node if="$(arg vis)" name="rviz" pkg="rviz" type="rviz"

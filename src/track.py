@@ -36,8 +36,8 @@ class trackControl(object):
             self.real_pos_y = 0
             for t in range(1, self.num + 1):
                 theta = t * 2 * np.pi / self.num
-                yp = self.r * math.sin(theta)
-                xp = self.r * math.cos(theta) - self.r
+                yp = self.r/2 * math.sin(theta)
+                xp = self.r/2 * math.cos(theta) - self.r/2
                 # self.zero()
                 self.control(xp, yp)
                 self.pos_x = xp
@@ -109,7 +109,7 @@ class trackControl(object):
                 xp = self.pos_x - (1.0 * self.r / self.num) # next desired yp
                 yp = 0 # keep constant
                 # print yp
-                self.control(xp, yp) # get the velocity from 
+                self.control(xp, yp) # get the velocity from
                 self.pos_x = xp
                 self.pos_y = yp
 
@@ -130,7 +130,7 @@ class trackControl(object):
         # self.twist_mag.linear.x = (det_x / self.T) / 2  # Too fast, so divided by 2
         # self.twist_mag.linear.y = (det_y / self.T) / 2  # Too fast, so divided by 2
         self.twist_mag.linear.x = (det_x / self.T) #Original: Need m/s
-        self.twist_mag.linear.y = (det_y / self.T) #Original 
+        self.twist_mag.linear.y = (det_y / self.T) #Original
         print "x = ", self.twist_mag.linear.x
         print "y = ", self.twist_mag.linear.y
 
