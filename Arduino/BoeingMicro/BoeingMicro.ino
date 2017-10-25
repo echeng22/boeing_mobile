@@ -1,5 +1,4 @@
-// Files needed to run ROS
-
+// Files needed to run ROS on Arduino
 #include <ros.h>
 #include <geometry_msgs/Twist.h>
 #include <ros/time.h>
@@ -7,14 +6,7 @@
 #include <geometry_msgs/Pose.h>
 #include <std_msgs/String.h>
 
-//
-// Files needed to run interrupts on Arduino.
-//  - Timer One is a 16 bit hardware timer on Arduino. Documentation: https://playground.arduino.cc/Code/Timer1
-//
-//#include <TimerOne.h>
-
 //Custom Velocity Conversion Library
-
 #include <omni_robot_util.h>
 
 // Kangaroo Motion Controller Library and Definitions
@@ -23,6 +15,8 @@
 //   - Serial2 Pins: 16 - TX (White), 17 - RX (Red)
 #include <Kangaroo.h>
 
+
+// Initialize Kangaroo Serial objects
 KangarooSerial  K1(Serial1);
 KangarooChannel K1_1(K1, '1');
 KangarooChannel K1_2(K1, '2');
@@ -56,6 +50,7 @@ geometry_msgs::Pose odom;
 
 void updateWheelVel(const geometry_msgs::Twist& twist){
   getAngVelFourWheels(twist.linear.x, twist.linear.y, twist.angular.z, wheel_vals);
+  
   /* 
    *  K1 wheel velocities are flipped due to how the reference frame used to convert twist to wheel velocities.
    *  This is done to match the setup used in Professor Lynch's Robotic Manipulation book (pg. 519).
@@ -68,10 +63,11 @@ void updateWheelVel(const geometry_msgs::Twist& twist){
 
 ros::Subscriber<geometry_msgs::Twist> twist_sub("/vel", updateWheelVel);
 ros::Publisher odom_pub("/odom", &odom); 
-//
-///*
-// * Arduino Code Setup
-// */
+
+
+/*
+ * Arduino Code Setup
+ */
 
 void setup() {
   // Setup communication to Kangaroo Motion Controller  
@@ -86,20 +82,23 @@ void setup() {
   K2_1.home().wait();
   K2_2.start();
   K2_2.home().wait();
-//
+
+  // Set streaming on Kangaroo to true. This means that there is no verification to see if the command was received or not. This improves command rate at the cost of reduced reliability.
+  // Noticed that when streaming is false, odom messages are not reliably being published. May be due to delays in verifying commands.
   K1_1.streaming(true);
   K1_2.streaming(true);
   K2_1.streaming(true);
   K2_2.streaming(true);
-//  
-//   // Initialize ROS Nodes
+  
+  // Initialize ROS Nodes
   nh.initNode();
   nh.subscribe(twist_sub);
   nh.advertise(odom_pub);
 }
 
 
-
+// spinOnce is used to keep ROS on Arduino and on the Linux computer in sync. If not called enough or there is a function that takes a significant amount of time to run, loss of sync error will occur and cause a drop in messages being published
+// by the Arduino. To avoid this, spinOnce is added in locations where delays may occur in the code.
 void loop() {
   nh.spinOnce();  
   integrateOdom();
@@ -110,6 +109,7 @@ void loop() {
   nh.spinOnce();  
 }
 
+// Function that updates the previous and current KU values for each wheel. Also calculates the difference in time between function calls.
 void integrateOdom(){
   // Update previous values
   k1_1p = k1_1c;
@@ -131,6 +131,7 @@ void integrateOdom(){
   prev_t = curr_t;
 }
 
+// Function that calculates the odometry of the robot and builds the odom message to be published.
 void pubOdom(){    
   //Calculate wheel speeds in KU units
   u1 = (int)(((k1_2c - k1_2p)/dt) + .5);
