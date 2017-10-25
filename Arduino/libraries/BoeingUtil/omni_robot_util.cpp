@@ -1,5 +1,4 @@
 #include "omni_robot_util.h"
-//#include <iostream>
 
 /*
 *   KU1_2 = Wheel 1
@@ -8,15 +7,15 @@
 *   KU2_2 = Wheel 4
 */
 
-int wheels_KU[] = {KU1_2, KU1_1, KU2_1, KU2_2};
+const int wheels_KU[] = {KU1_2, KU1_1, KU2_1, KU2_2};
 
-/*
-* getAngVelFourWheels: Converts twist values into four wheel velocities in Kangaroo Units.
-*   - vx, vy: Velocity in X and Y direction. Units are in meters/sec.
-*   - wz: Rotational velocity around the z-axis. Units are in radians/sec.
-*   - *u: Array of int with length 4 used to hold the resulting wheel velocities. Values are in Kangaroo Units
-*/
-
+/// @brief Converts twist values into four wheel velocities in Kangaroo Units.
+/// Core equations used to calculate this can be found on pg. 519 of Professor Lynch's Robotic Manipulation book (Eq 13.10).
+/// @param vx [in] A double representing the linear velocity of the body of the robot in meters/sec in the x direction.
+/// @param vy [in] A double representing the linear velocity of the body of the robot in meters/sec in the y direction.
+/// @param wz [in] A double representing the angular velocity of the body of the robot in rad/sec around the z axis.
+/// @param *u [in/out] An integer array that stores the resulting wheel velocities needed to move the robot at the desired twist.
+///@post Values inside *u will be in Kangaroo Units (KU) and represent the desired wheel velocties for the robot.
 void getAngVelFourWheels(double vx, double vy, double wz, int *u)
 {
     int i;
@@ -30,12 +29,14 @@ void getAngVelFourWheels(double vx, double vy, double wz, int *u)
     }
 }
 
-/*
-* getTwistFourWheels: Converts four Kangaroo Unit values to four wheel velocities into twist values.
-*   - u1, u2, u3, u4: Velocities of each wheel. Units are in Kangaroo Units.
-*   - *twist: Array of doubles with length 3 used to hold resulting twist values. Values are in meters/sec, meters/sec, and radians/sec respectively.
-*/
-
+/// @brief Converts four Kangaroo Unit values to body twist values.
+/// Used the inverse of the equation found in pg. 519 of Professor Lynch's Robotic Manipulation book (Eq 13.10).
+/// @param u1 [in] An integer that represents wheel velocity of wheel 1. Units are in KU.
+/// @param u2 [in] An integer that represents wheel velocity of wheel 2. Units are in KU.
+/// @param u3 [in] An integer that represents wheel velocity of wheel 3. Units are in KU.
+/// @param u4 [in] An integer that represents wheel velocity of wheel 4. Units are in KU.
+/// @param *twist [in/out] A double array that stores the resulting twist values with the wheel velocity inputs.
+///@post Values inside *twist will represent, in the order of, Vx, Vy, Wz, where Vx and Vy represent linear velocities in the x and y direction (meters/sec), and Wz represent angular velocities around the z axis (rad/sec).
 void getTwistFourWheels(int u1, int u2, int u3, int u4, double *twist)
 {
     double v1 = u1 * CONV_VAL/wheels_KU[0];
@@ -50,17 +51,3 @@ void getTwistFourWheels(int u1, int u2, int u3, int u4, double *twist)
     twist[1] = Vy;
     twist[2] = Wz;
 }
-
-/*
-Some error exists due to floating number error. Values when converting back and forth are accurate to each other.
-
-int main()
-{
-    int testVel[4];
-    getAngVelFourWheels(.5, .5, 1, testVel);
-    std::cout << testVel[0] << ", " << testVel[1] << ", " << testVel[2] << ", " << testVel[3] << std::endl;
-    double testTwist[3];
-    getTwistFourWheels(testVel[0], testVel[1], testVel[2], testVel[3], testTwist);
-    std::cout << testTwist[0] << ", " << testTwist[1] << ", " << testTwist[2] << std::endl;
-}
-*/
